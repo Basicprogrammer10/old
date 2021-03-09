@@ -68,7 +68,7 @@ namespace Minecraft_ChunkControl
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(52)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.panel1);
-            this.Cursor = System.Windows.Forms.Cursors.SizeAll;
+            this.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.Name = "MainWindow";
             this.Text = "MainWindow";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainWindow_Paint);

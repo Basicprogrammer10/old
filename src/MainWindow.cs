@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Minecraft_ChunkControl
 {
     public partial class MainWindow : Form
     {
-        private int Mul = 27;
-        private int orgX = 100;
-        private int orgY = 100;
+        private int Mul = 18;
+        private int Size = 15;
+        private int OrgX = 100;
+        private int OrgY = 100;
+
+        private int x = 20;
+        private int y = 20;
 
         private readonly Color BgColor = Color.FromArgb(46, 52, 64);
         private readonly Color FgColor = Color.FromArgb(191, 97, 106);
@@ -25,49 +24,55 @@ namespace Minecraft_ChunkControl
 
         private void MainWindow_Paint(object sender, PaintEventArgs e)
         {
-            ClearColor(e);
-            drawArray();
+            //ClearColor(e);
+            DrawArray();
         }
 
-        private void drawArray()
+        private void DrawArray()
         {
-            for (int i = 0; i < 10; i++)
+            for (var I = 0; I < x; I++)
             {
-                for (int j = 0; j < 10; j++)
+                for (var J = 0; J < y; J++)
                 {
-                    drawBox(i * Mul + orgX - Left, j * Mul + orgY - Top, 25, 25, FgColor);
+                    DrawBox(I * Mul + OrgX - Left, J * Mul + OrgY - Top, Size, Size, FgColor);
                 }
             }
         }
 
         private void ClearColor(PaintEventArgs e)
         {
-            e.Graphics.Clear(BgColor);
+            //e.Graphics.Clear(BgColor);
         }
 
-        private void drawBox(int x, int y, int w, int h, Color color)
+        private void DrawBox(int x, int y, int w, int h, Color color)
         {
-            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(color);
-            var formGraphics = this.CreateGraphics();
-            formGraphics.FillRectangle(myBrush, new Rectangle(x, y, w, h));
-            myBrush.Dispose();
-            formGraphics.Dispose();
+            var MyBrush = new SolidBrush(color);
+            var FormGraphics = this.CreateGraphics();
+            FormGraphics.FillRectangle(MyBrush, new Rectangle(x, y, w, h));
+            MyBrush.Dispose();
+            FormGraphics.Dispose();
         }
 
         private void MainWindow_MouseUp(object sender, MouseEventArgs e)
         {
+            if (e.Button != MouseButtons.Right)
+                return;
             timer1.Enabled = false;
+            Cursor = Cursors.Arrow;
         }
 
         private void MainWindow_MouseDown(object sender, MouseEventArgs e)
         {
+            if (e.Button != MouseButtons.Right)
+                return;
             timer1.Enabled = true;
+            Cursor = Cursors.SizeAll;
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            orgX = Cursor.Position.X;
-            orgY = Cursor.Position.Y;
-            Refresh();
+            OrgX = Cursor.Position.X - x / 2 * Mul;
+            OrgY = Cursor.Position.Y - y / 2 * Mul;
+            Invalidate();
         }
     }
 }
