@@ -1,0 +1,20 @@
+{
+  "name": "discord-webhook-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Basicprogrammer10/Discord-Webhook-Proxy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Basicprogrammer10/Discord-Webhook-Proxy/issues"
+  },
+  "homepage": "https://github.com/Basicprogrammer10/Discord-Webhook-Proxy#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.2.6"
+  }
+}
