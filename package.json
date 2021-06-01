@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
+  "scripts": {
+    "start": "node src"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Basicprogrammer10/Discord-Webhook-Proxy.git"
@@ -14,6 +17,7 @@
   },
   "homepage": "https://github.com/Basicprogrammer10/Discord-Webhook-Proxy#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6"
   }

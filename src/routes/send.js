@@ -2,18 +2,15 @@ const axios = require('axios').default;
 
 function process(app, config) {
     app.post('/send', function (req, res) {
-        axios.post('/user', {
-            firstName: 'Fred',
-            lastName: 'Flintstone'
-          })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-        
-        res.send({response: 'success'})
+        axios.post('/user', { })
+            .then(function (r) {
+                console.log(r);
+            })
+            .catch(function (e) {
+                console.log(e);
+            });
+
+        res.send({ response: 'success' })
         //res.status(503).send({response: 'error', error: '???'})
     });
 }
