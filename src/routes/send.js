@@ -13,10 +13,17 @@ function process(app, config) {
         res.send({ response: 'success' })
         //res.status(503).send({response: 'error', error: '???'})
     });
+
+    app.post('/send/basic', (req, res) => {
+        axios.post(config.hook.url, {
+            content: req.body.content || 'NULL',
+        })
+        res.send({ response: 'success' })
+        //res.status(503).send({response: 'error', error: '???'})
+    });
 }
 
 module.exports = {
-    name: 'send',
     disc: 'Send webhooks',
     process: process
 }

@@ -1,10 +1,15 @@
 {
     "server": {
         "ip": "0.0.0.0",
-        "port": 5858
+        "port": 5858,
+        "rateLimit": {
+            "message": {"error": "Rate limit exceeded"},
+            "windowMs": 300000,
+            "max": 1
+          }
     },
     "hook": {
-        "url": "",
+        "url": "https://discord.com/api/webhooks/801116728394121287/FrpAcHXI51zo78Mqe-DbqrfDfQfSK66jUgBnLMO0KmEyRLuOhHGRuLbdGFeVsXYGrIqK",
         "name": "",
         "icon": ""
     }
