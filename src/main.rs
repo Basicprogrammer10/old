@@ -18,6 +18,11 @@ fn main() {
     // Parse command line arguments
     let args: Vec<String> = env::args().collect();
     let s_char: &str = &arg_parse::get_arg_value(&args, "--letter").unwrap_or("B")[..1];
+    let years: &str = &arg_parse::get_arg_value(&args, "--yob").unwrap_or("*");
+    let length: &u8 = &arg_parse::get_arg_value(&args, "--len")
+        .unwrap_or("0")
+        .parse::<u8>()
+        .unwrap();
 
     let mut names: Vec<String> = Vec::new();
 
@@ -31,6 +36,9 @@ fn main() {
     for raw_path in paths {
         let entry = raw_path.unwrap();
         let path = entry.path();
+        if !path.to_str().unwrap().contains(years) || years == "*" {
+            continue;
+        }
         cprint!(
             Color::Green,
             "\r[*] Loading: {}\x1b[1A",
@@ -48,7 +56,10 @@ fn main() {
         for line in lines {
             let data = line.split(',').collect::<Vec<&str>>();
             let name = data.first().unwrap().to_string();
-            if &name == "" || names.contains(&name) {
+            if &name == ""
+                || names.contains(&name)
+                || length != &0 && name.len() == (*length).into()
+            {
                 continue;
             }
             if s_char == "*" || &name[..1] == s_char {
@@ -61,6 +72,9 @@ fn main() {
     names.sort();
     cprint!(Color::Green, "\n[*] Loaded {} B-names", names.len());
     cprint!(Color::Green, "[*] Done\n");
+    if &names.len() == &0 {
+        std::process::exit(1);
+    }
     cprint!(Color::Magenta, "R - Pick Random Name");
     cprint!(Color::Magenta, "Q - Exit");
     println!("\n");
