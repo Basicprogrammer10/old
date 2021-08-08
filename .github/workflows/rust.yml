@@ -21,24 +21,11 @@ jobs:
     - name: Build
       run: cargo build --release
 
-    - name: Upload Linux
-    - if: matrix.os == ubuntu-latest
+    - name: Upload Build
     - uses: actions/upload-artifact@v2
       with:
-        name: bee_names
-        path: ./target/release/bee_names
-        
-    - name: Upoad Macos
-    - if: matrix.os == macos-latest
-    - run: ls ./target/release/
-    - uses: actions/upload-artifact@v2
-      with:
-        name: bee_names.app
-        path: ./target/release/bee_names.app
-
-    - name: Upload Windows
-    - if: matrix.os == windows-latest
-    - uses: actions/upload-artifact@v2
-      with:
-        name: bee_names.exe
-        path: ./target/release/bee_names.exe
+        name: bee_names-${{ matrix.os }}
+        path: |
+          ./target/release/bee_names*
+          !./target/release/bee_names.d
+          !./target/release/bee_names.pdb
