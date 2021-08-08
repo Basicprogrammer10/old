@@ -1,10 +1,12 @@
 use console::Term;
 use rand::seq::SliceRandom;
+use std::env;
 use std::fs;
 use std::io::Write;
 
 #[macro_use]
 mod color;
+mod arg_parse;
 use color::Color;
 
 fn main() {
@@ -12,6 +14,10 @@ fn main() {
         "{}",
         color::color_bold("[*] Starting Bee Name Gen", Color::Green)
     );
+
+    // Parse command line arguments
+    let args: Vec<String> = env::args().collect();
+    let s_char: &str = &arg_parse::get_arg_value(&args, "--letter").unwrap_or("B")[..1];
 
     let mut names: Vec<String> = Vec::new();
 
@@ -42,7 +48,10 @@ fn main() {
         for line in lines {
             let data = line.split(',').collect::<Vec<&str>>();
             let name = data.first().unwrap().to_string();
-            if !names.contains(&name) && &name != "" && &name[..1] == "B" {
+            if &name == "" || names.contains(&name) {
+                continue;
+            }
+            if s_char == "*" || &name[..1] == s_char {
                 names.push(name);
             }
         }
@@ -82,7 +91,7 @@ fn main() {
             }
             // Exit
             'q' => {
-                cprint!(Color::Red, "\x1b[1A[+] Exiting - Goodby :P");
+                cprint!(Color::Red, "\x1b[1A[*] Exiting - Goodby :P");
                 break;
             }
             // *nothing*
