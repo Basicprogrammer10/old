@@ -1,11 +1,13 @@
 #![allow(warnings)]
 use attohttpc;
-use std::{collections::HashMap, num::ParseIntError};
+use chrono::{DateTime, NaiveDateTime, Utc};
+use std::env;
 use std::num::ParseFloatError;
+use std::{collections::HashMap, num::ParseIntError};
 
 #[macro_use]
 mod color;
-use chrono::{DateTime, NaiveDateTime, Utc};
+mod arg_parse;
 use color::Color;
 
 struct DataPoint {
@@ -22,11 +24,19 @@ struct TempData {
 }
 
 fn main() {
+    // Parse command line arguments
+    let args: Vec<String> = env::args().collect();
+    let host: &str = arg_parse::get_arg_value(&args, "--host").unwrap_or("water.connorcode.com");
+    let per: usize = arg_parse::get_arg_value(&args, "--per")
+        .unwrap_or("15")
+        .parse()
+        .unwrap_or(100);
+
     color_print!(Color::Green, "[*] Starting :P");
 
     // Get temperature history from api
     color_print!(Color::Cyan, "[*] Getting Data");
-    let res = attohttpc::get("https://water.connorcode.com/data/download.csv")
+    let res = attohttpc::get(format!("https://{}/data/download.csv", host))
         .send()
         .unwrap();
 
@@ -45,7 +55,7 @@ fn main() {
     let mut max: f32 = f32::MIN;
 
     // Example Line: 1629049085,8/15/2021 5:38:05 PM,77.9
-    for i in raw_data.iter().skip(1).step_by(100) {
+    for i in raw_data.iter().skip(1).step_by(per) {
         let line: Vec<&str> = i.split(',').collect();
         if line.len() < 3 {
             continue;
@@ -137,9 +147,6 @@ impl TempData {
 
 impl DataPoint {
     fn new(time: u32, temp: f32) -> DataPoint {
-        DataPoint {
-            time,
-            temp,
-        }
+        DataPoint { time, temp }
     }
 }
