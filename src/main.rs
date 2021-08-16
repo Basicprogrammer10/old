@@ -1,6 +1,6 @@
 #![allow(warnings)]
 use attohttpc;
-use std::collections::HashMap;
+use std::{collections::HashMap, num::ParseIntError};
 use std::num::ParseFloatError;
 
 #[macro_use]
@@ -8,12 +8,17 @@ mod color;
 use chrono::{DateTime, NaiveDateTime, Utc};
 use color::Color;
 
+struct DataPoint {
+    time: u32,
+    temp: f32,
+}
+
 struct TempData {
     values: u32,
     min: f32,
     max: f32,
     /// Time, Temp
-    data: Vec<[f32; 2]>,
+    data: Vec<DataPoint>,
 }
 
 fn main() {
@@ -34,7 +39,7 @@ fn main() {
     // Parse data to a Hash Map
     color_print!(Color::Cyan, "[*] Parsing Data");
     let raw_data: Vec<&str> = res_data.split('\n').collect();
-    let mut data: Vec<[f32; 2]> = Vec::new();
+    let mut data: Vec<DataPoint> = Vec::new();
     let mut last_update: u32 = 0;
     let mut min: f32 = f32::MAX;
     let mut max: f32 = f32::MIN;
@@ -46,7 +51,7 @@ fn main() {
             continue;
         }
 
-        let time: Result<f32, ParseFloatError> = line[0].parse();
+        let time: Result<u32, ParseIntError> = line[0].parse();
         let temp: Result<f32, ParseFloatError> = line[2].parse();
         if time.is_err() || temp.is_err() {
             continue;
@@ -54,7 +59,7 @@ fn main() {
         last_update = *time.as_ref().unwrap() as u32;
         min = f32::min(min, *temp.as_ref().unwrap());
         max = f32::max(max, *temp.as_ref().unwrap());
-        data.push([time.unwrap(), temp.unwrap()]);
+        data.push(DataPoint::new(time.unwrap(), temp.unwrap()));
     }
     let data = TempData::new(0, 0.0, 100.0, data);
 
@@ -63,7 +68,7 @@ fn main() {
 
     let mut working: Vec<f32> = Vec::new();
     for i in &data.data {
-        working.push(i[1]);
+        working.push(i.temp);
     }
 
     // Draw Graph
@@ -120,12 +125,21 @@ fn print_stats(update: u32, total_points: usize, points: usize, min: f32, max: f
 }
 
 impl TempData {
-    fn new(values: u32, min: f32, max: f32, data: Vec<[f32; 2]>) -> TempData {
+    fn new(values: u32, min: f32, max: f32, data: Vec<DataPoint>) -> TempData {
         TempData {
             values,
             min,
             max,
             data,
+        }
+    }
+}
+
+impl DataPoint {
+    fn new(time: u32, temp: f32) -> DataPoint {
+        DataPoint {
+            time,
+            temp,
         }
     }
 }
