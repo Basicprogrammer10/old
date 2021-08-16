@@ -7,4 +7,4 @@ edition = "2018"
 
 [dependencies]
 attohttpc = "0.17.0"
-termsize = "0.1"
+chrono = "0.4.19"

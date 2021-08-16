@@ -1,10 +1,11 @@
+#![allow(warnings)]
 use attohttpc;
 use std::collections::HashMap;
-use std::num::{ParseFloatError, ParseIntError};
-use termsize;
+use std::num::ParseFloatError;
 
 #[macro_use]
 mod color;
+use chrono::{DateTime, NaiveDateTime, Utc};
 use color::Color;
 
 struct TempData {
@@ -12,7 +13,7 @@ struct TempData {
     min: f32,
     max: f32,
     /// Time, Temp
-    data: Vec<[f32; 2]>
+    data: Vec<[f32; 2]>,
 }
 
 fn main() {
@@ -33,6 +34,7 @@ fn main() {
     // Parse data to a Hash Map
     color_print!(Color::Cyan, "[*] Parsing Data");
     let raw_data: Vec<&str> = res_data.split('\n').collect();
+    let mut last_update: u32 = 0;
     let mut data: Vec<[f32; 2]> = Vec::new();
 
     // Example Line: 1629049085,8/15/2021 5:38:05 PM,77.9
@@ -47,6 +49,7 @@ fn main() {
         if time.is_err() || temp.is_err() {
             continue;
         }
+        last_update = *time.as_ref().unwrap() as u32;
         data.push([time.unwrap(), temp.unwrap()]);
     }
     let data = TempData::new(0, 0.0, 100.0, data);
@@ -56,15 +59,17 @@ fn main() {
     // let term = termsize::get().unwrap();
     // println!("X: {} - Y: {}", term.rows, term.cols);
 
-    let mut  working: Vec<f32> = Vec::new();
-    for i in data.data {
+    let mut working: Vec<f32> = Vec::new();
+    for i in &data.data {
         working.push(i[1]);
     }
 
     // Draw Graph
-    for i in working {
-        println!("{}", draw_h_line(i));
+    for i in working.iter() {
+        println!("{}", draw_h_line(*i));
     }
+
+    print_stats(last_update, raw_data.len(),working.len(), 0, 10);
 }
 
 fn draw_h_line(len: f32) -> String {
@@ -79,10 +84,37 @@ fn draw_h_line(len: f32) -> String {
         0.30..=0.45 => "▌",
         0.15..=0.30 => "▍",
         0.00..=0.15 => "▎",
-        _ => ""
+        _ => "",
     };
 
     working.to_string()
+}
+
+/// Fancy Stats Box Thing :P
+fn print_stats(update: u32, total_points: usize, points: usize, min: i32, max: i32) {
+    let naive_datetime = NaiveDateTime::from_timestamp(update as i64, 0);
+    let datetime_again: DateTime<Utc> = DateTime::from_utc(naive_datetime, Utc);
+    println!("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+    println!("┃            Water Temp Graph            ┃");
+    println!("┃            ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔            ┃");
+    println!("┃ Last Update ─ {}  ┃", datetime_again);
+    println!(
+        "┃ Data Points ─ {} ({}){}  ┃",
+        points,
+        total_points,
+        " ".repeat(20 - points.to_string().len() - total_points.to_string().len())
+    );
+    println!(
+        "┃         Min ─ {}°F{}  ┃",
+        min,
+        " ".repeat(21 - min.to_string().len())
+    );
+    println!(
+        "┃         Max ─ {}°F{}  ┃",
+        max,
+        " ".repeat(21 - max.to_string().len())
+    );
+    println!("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 }
 
 impl TempData {
@@ -91,7 +123,7 @@ impl TempData {
             values,
             min,
             max,
-            data
+            data,
         }
     }
 }
