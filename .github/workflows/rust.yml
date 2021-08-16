@@ -1,0 +1,31 @@
+name: Rust
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: cargo build --release
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: water_temp_graph-${{ matrix.os }}
+        path: |
+          ./target/release/water_temp_graph*
+          !./target/release/water_temp_graph.d
+          !./target/release/water_temp_graph.pdb
