@@ -34,8 +34,10 @@ fn main() {
     // Parse data to a Hash Map
     color_print!(Color::Cyan, "[*] Parsing Data");
     let raw_data: Vec<&str> = res_data.split('\n').collect();
-    let mut last_update: u32 = 0;
     let mut data: Vec<[f32; 2]> = Vec::new();
+    let mut last_update: u32 = 0;
+    let mut min: f32 = f32::MAX;
+    let mut max: f32 = f32::MIN;
 
     // Example Line: 1629049085,8/15/2021 5:38:05 PM,77.9
     for i in raw_data.iter().skip(1).step_by(100) {
@@ -50,14 +52,14 @@ fn main() {
             continue;
         }
         last_update = *time.as_ref().unwrap() as u32;
+        min = f32::min(min, *temp.as_ref().unwrap());
+        max = f32::max(max, *temp.as_ref().unwrap());
         data.push([time.unwrap(), temp.unwrap()]);
     }
     let data = TempData::new(0, 0.0, 100.0, data);
 
     // Graphing...
     color_print!(Color::Cyan, "[*] Graphing!");
-    // let term = termsize::get().unwrap();
-    // println!("X: {} - Y: {}", term.rows, term.cols);
 
     let mut working: Vec<f32> = Vec::new();
     for i in &data.data {
@@ -69,7 +71,7 @@ fn main() {
         println!("{}", draw_h_line(*i));
     }
 
-    print_stats(last_update, raw_data.len(),working.len(), 0, 10);
+    print_stats(last_update, raw_data.len(), working.len(), min, max);
 }
 
 fn draw_h_line(len: f32) -> String {
@@ -91,7 +93,7 @@ fn draw_h_line(len: f32) -> String {
 }
 
 /// Fancy Stats Box Thing :P
-fn print_stats(update: u32, total_points: usize, points: usize, min: i32, max: i32) {
+fn print_stats(update: u32, total_points: usize, points: usize, min: f32, max: f32) {
     let naive_datetime = NaiveDateTime::from_timestamp(update as i64, 0);
     let datetime_again: DateTime<Utc> = DateTime::from_utc(naive_datetime, Utc);
     println!("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
