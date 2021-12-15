@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.7.0/dist/cdn.min.js"
+    ></script>
+    <script src="/index.js"></script>
+    <link rel="stylesheet" href="/index.css">
+    <title>idk</title>
+  </head>
+  <body>
+    <div class="elements" x-data="data()" x-init="load()">
+      <template x-cloak x-for="i in data">
+        <div class="item">
+          <img :src="i.img">
+          <p x-text="i.name"></p>
+          <p class="count" x-text="`×${i.in}`"></p>
+          <div class="dot" x-bind:style="getColor(i.in, i.total)"></div>
+        </div>
+      </template>
+    </div>
+  </body>
+</html>
