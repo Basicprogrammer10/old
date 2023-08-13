@@ -1,0 +1,9 @@
+V:\Programming\C++\Minecraft-ChunkControl\src\bin\Debug\Minecraft-ChunkControl.exe
+V:\Programming\C++\Minecraft-ChunkControl\src\bin\Debug\Minecraft-ChunkControl.pdb
+V:\Programming\C++\Minecraft-ChunkControl\src\obj\Debug\Minecraft-ChunkControl.csprojAssemblyReference.cache
+V:\Programming\C++\Minecraft-ChunkControl\src\obj\Debug\Minecraft_ChunkControl.Properties.Resources.resources
+V:\Programming\C++\Minecraft-ChunkControl\src\obj\Debug\Minecraft-ChunkControl.csproj.GenerateResource.cache
+V:\Programming\C++\Minecraft-ChunkControl\src\obj\Debug\Minecraft-ChunkControl.csproj.CoreCompileInputs.cache
+V:\Programming\C++\Minecraft-ChunkControl\src\obj\Debug\Minecraft-ChunkControl.exe
+V:\Programming\C++\Minecraft-ChunkControl\src\obj\Debug\Minecraft-ChunkControl.pdb
+V:\Programming\C++\Minecraft-ChunkControl\src\obj\Debug\Minecraft_ChunkControl.MainWindow.resources
