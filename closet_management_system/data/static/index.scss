@@ -1,0 +1,47 @@
+body {
+  color: #989eb1;
+  background: #1b1c20;
+}
+
+.item {
+  background: #222531;
+  width: calc(95vw - 20px);
+  padding: 10px;
+  border-radius: 15px;
+  font-family: sans-serif;
+  margin: 10px 0 10px 0;
+  height: 50px;
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
+
+  & > .dot {
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+    position: absolute;
+    display: inline;
+    margin: calc(25px / 2);
+    right: 10px;
+  }
+
+  & > .count {
+    position: absolute;
+    right: 45px;
+  }
+
+  & > img {
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  & > p {
+    font-size: 20px;
+    display: inline;
+    margin: 13.5px;
+    position: absolute;
+  }
+}
